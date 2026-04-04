@@ -1,0 +1,111 @@
+{
+  "name": "My workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        0,
+        0
+      ],
+      "id": "01c15e59-90e8-43c9-aac2-001399506315",
+      "name": "Telegram Trigger",
+      "webhookId": "a045bfb5-926f-41ac-8942-18da2abb3831",
+      "credentials": {
+        "telegramApi": {
+          "id": "Ng9PUfDG9SAXLMt3",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://python-api:8000/ask",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "question",
+              "value": "={{ $json.message.text }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        208,
+        0
+      ],
+      "id": "be952fa0-8d5a-4297-8473-78945997eb3e",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "text": "={{ $json.answer }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        416,
+        0
+      ],
+      "id": "dd4f6d4c-a908-44ac-8509-3a1ef9ba7ced",
+      "name": "Send a text message",
+      "webhookId": "dcf48ff3-d254-428b-9e33-9c15cf2b0b2a",
+      "credentials": {
+        "telegramApi": {
+          "id": "Ng9PUfDG9SAXLMt3",
+          "name": "Telegram account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Send a text message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "115fccbf-edf5-4557-8079-2db5853849a3",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "5fd454d78574368715f6ff24fc75c74ba7036c449b2e84fe0d0032b030e58422"
+  },
+  "id": "jsrXjYhhCoE4nxJ8",
+  "tags": []
+}
